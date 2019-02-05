@@ -19,7 +19,7 @@ class TodoListViewController: UITableViewController
     {
         super.viewDidLoad()
         
-        if items = self.defaults.array(forKey: "TodoListArray")
+        if let items = self.defaults.array(forKey: "TodoListArray") as? [String]
         {
             self.itemArray = items
         }
