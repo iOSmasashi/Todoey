@@ -11,7 +11,7 @@ import UIKit
 class TodoListViewController: UITableViewController
 {
 
-    var itemArray = [String]()
+    var itemArray = [Item]()
     
     let defaults = UserDefaults.standard
     
@@ -19,7 +19,20 @@ class TodoListViewController: UITableViewController
     {
         super.viewDidLoad()
         
-        if let items = self.defaults.array(forKey: "TodoListArray") as? [String]
+        let newItem = Item()
+        newItem.title = "Find Mike"
+        itemArray.append(newItem)
+        
+        let newItem2 = Item()
+        newItem2.title = "Find Mike 2"
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item()
+        newItem3.title = "Find Mike 3"
+        itemArray.append(newItem3)
+        
+        
+        if let items = self.defaults.array(forKey: "TodoListArray") as? [Item]
         {
             self.itemArray = items
         }
@@ -38,7 +51,9 @@ class TodoListViewController: UITableViewController
             
             if !(alert.textFields?.first?.text?.isEmpty)!
             {
-                self.itemArray.append((alert.textFields?.first?.text!)!)
+                let newItem = Item()
+                newItem.title = (alert.textFields?.first?.text!)!
+                self.itemArray.append(newItem)
                 
                 self.defaults.set(self.itemArray, forKey: "TodoListArray")
                 
@@ -68,7 +83,8 @@ class TodoListViewController: UITableViewController
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        cell.textLabel?.text = itemArray[indexPath.row].title
+        cell.accessoryType = itemArray[indexPath.row].done ? .checkmark : .none
         
         return cell
         
@@ -78,14 +94,8 @@ class TodoListViewController: UITableViewController
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        if tableView.cellForRow(at: indexPath)?.accessoryType != .checkmark
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
-        else
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        }
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        tableView.cellForRow(at: indexPath)?.accessoryType = itemArray[indexPath.row].done ? .checkmark : .none
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
